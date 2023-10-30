@@ -9,11 +9,35 @@ Movie Catalog is a Flutter application that allows you to discover and search fo
 - View movie details, including the title, overview, release date, and poster.
 - Navigate to the Movie Details page for more information.
 
+
+
+## Usage
+Home Screen:
+
+- After launching the app, you'll land on the homepage.
+- Browse movies by selecting categories, including "Upcoming Movies," "Top Rated Movies," and "Now Playing Movies."
+- Use the search icon to find movies based on keywords.
+### Movie Details:
+
+- Tapping on a movie poster on the Home Screen will take you to the Movie Details page.
+- In the Movie Details page, you can find more information about the selected movie, including its poster, title, and description.
+
+### Search Screen:
+
+- Navigate to the search page using the search icon on the Home Screen.
+- In the search page, enter keywords to search for movies.
+- Tapping on a searched movie will take you to its Movie Details page.
+
+
 ## Screenshots
 
-![Screenshot 1](screenshots/screenshot1.png)
-![Screenshot 2](screenshots/screenshot2.png)
-![Screenshot 3](screenshots/screenshot3.png)
+<div align="center">
+    <img src="screenshots/Screenshot1.png" alt="Screenshot 1" width="250" style="margin: 10px;">
+    <img src="screenshots/Screenshot2.png" alt="Screenshot 2" width="250" style="margin: 10px;">
+    <img src="screenshots/Screenshot3.png" alt="Screenshot 3" width="250" style="margin: 10px;">
+    <img src="screenshots/Screenshot4.png" alt="Screenshot 4" width="250" style="margin: 10px;">
+</div>
+
 
 ## Getting Started
 
