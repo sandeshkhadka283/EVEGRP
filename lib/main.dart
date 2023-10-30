@@ -1,9 +1,11 @@
 import 'package:evegrp/MovieDetailsPage.dart';
+import 'package:evegrp/SearchPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity/connectivity.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,10 +23,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   Future<List<dynamic>> fetchMovies(String endpoint) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult == ConnectivityResult.none) {
+      // Display a beautiful error message for no internet connection.
+      return Future.error('No internet connection. Please check your network.');
+    }
+
     const String apiKey =
         '01daaca0a538d06860c29b97e1a80188'; // Replace with your TMDb API key
     final String url =
@@ -39,65 +53,91 @@ class HomePage extends StatelessWidget {
     }
   }
 
+  Future<void> _refresh() async {
+    // You can trigger a refresh by calling this function.
+    setState(() {
+      // Set the state to loading or show a loading indicator.
+    });
+
+    try {
+      await fetchMovies("popular"); // Replace with your data loading function.
+      // Update the state with the new data.
+    } catch (e) {
+      // Handle errors if any.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: fetchMovies("popular"),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: _buildLoadingUI(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    final List<dynamic> movies = snapshot.data as List<dynamic>;
-                    final moviePosters = movies.map((movie) {
-                      return 'https://image.tmdb.org/t/p/w200${movie['poster_path']}';
-                    }).toList();
+        body: RefreshIndicator(
+          onRefresh: _refresh,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    // Navigate to the search page when the search icon is pressed.
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SearchPage()));
+                  },
+                ),
+                FutureBuilder(
+                  future: fetchMovies("popular"),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: _buildLoadingUI(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      final List<dynamic> movies =
+                          snapshot.data as List<dynamic>;
+                      final moviePosters = movies.map((movie) {
+                        return 'https://image.tmdb.org/t/p/w200${movie['poster_path']}';
+                      }).toList();
 
-                    return Column(
-                      children: [
-                        Stack(
-                          children: [
-                            CarouselSlider(
-                              items: moviePosters.map((posterUrl) {
-                                return GestureDetector(
-                                  onTap: () {},
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: Image.network(
-                                      posterUrl,
-                                      fit: BoxFit.cover,
+                      return Column(
+                        children: [
+                          Stack(
+                            children: [
+                              CarouselSlider(
+                                items: moviePosters.map((posterUrl) {
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: Image.network(
+                                        posterUrl,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                              options: CarouselOptions(
-                                height: 250.0,
-                                enlargeCenterPage: true,
-                                autoPlay: true,
-                                aspectRatio: 16 / 9,
+                                  );
+                                }).toList(),
+                                options: CarouselOptions(
+                                  height: 250.0,
+                                  enlargeCenterPage: true,
+                                  autoPlay: true,
+                                  aspectRatio: 16 / 9,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-              _buildMovieSection('Upcoming Movies', 'upcoming'),
-              _buildMovieSection('Top Rated Movies', 'top_rated'),
-              _buildMovieSection('Now Playing Movies', 'popular'),
-            ],
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+                _buildMovieSection('Upcoming Movies', 'upcoming'),
+                _buildMovieSection('Top Rated Movies', 'top_rated'),
+                _buildMovieSection('Now Playing Movies', 'popular'),
+              ],
+            ),
           ),
         ),
       ),
@@ -124,8 +164,8 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    Icon(Icons.movie, size: 24, color: Colors.blue),
-                    SizedBox(width: 8),
+                    const Icon(Icons.movie, size: 24, color: Colors.blue),
+                    const SizedBox(width: 8),
                     Text(
                       sectionTitle,
                       style: const TextStyle(

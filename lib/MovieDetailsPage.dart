@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MovieDetailsPage extends StatelessWidget {
   final Map<String, dynamic> movie;
 
-  MovieDetailsPage({required this.movie});
+  const MovieDetailsPage({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class MovieDetailsPage extends StatelessWidget {
                     child: Center(
                       child: Text(
                         movie['title'] ?? 'Movie Title',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -50,7 +50,7 @@ class MovieDetailsPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildSectionTitle('Overview', Icons.description, Colors.blue),
             _buildSectionContent(movie['overview'] ?? 'No overview available'),
             _buildSectionTitle(
@@ -87,10 +87,10 @@ class MovieDetailsPage extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: color),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -105,24 +105,23 @@ class MovieDetailsPage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Text(
         content,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
         ),
       ),
     );
   }
 
- Widget _buildGenres(List<dynamic> genreIds) {
-  if (genreIds == null || genreIds.isEmpty) {
-    return _buildSectionContent('No genre information available');
+  Widget _buildGenres(List<dynamic> genreIds) {
+    if (genreIds.isEmpty) {
+      return _buildSectionContent('No genre information available');
+    }
+
+    final genreNames = getGenreNames(genreIds.cast<int>());
+    final genreText = genreNames.join(', ');
+
+    return _buildSectionContent(genreText);
   }
-
-  final genreNames = getGenreNames(genreIds.cast<int>());
-  final genreText = genreNames.join(', ');
-
-  return _buildSectionContent(genreText);
-}
-
 
   List<String> getGenreNames(List<int> genreIds) {
     // Replace with your genre mapping based on the API or use a predefined genre list
