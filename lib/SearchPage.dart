@@ -1,3 +1,4 @@
+import 'package:evegrp/MovieDetailsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -42,8 +43,9 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: TextField(
           controller: _searchController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Search for movies...',
+            border: InputBorder.none, // Remove the underline
           ),
           onChanged: (query) {
             setState(() {
@@ -52,15 +54,6 @@ class _SearchPageState extends State<SearchPage> {
             _fetchMovies(query);
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              final query = _searchController.text;
-              _fetchMovies(query);
-            },
-          ),
-        ],
       ),
       body: _searching
           ? ListView.builder(
@@ -75,7 +68,7 @@ class _SearchPageState extends State<SearchPage> {
                   leading: Image.network(imageUrl),
                   title: Text(title),
                   onTap: () {
-                    // Handle tapping on a movie
+                    Navigator.of(context).push(_createRoute(movie));
                   },
                 );
               },
@@ -83,6 +76,27 @@ class _SearchPageState extends State<SearchPage> {
           : const Center(
               child: Text('Start typing to search for movies...'),
             ),
+    );
+  }
+
+  Route _createRoute(Map<String, dynamic> movie) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return MovieDetailsPage(movie: movie);
+      },
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = 0.0;
+        const end = 1.0;
+        const curve = Curves.easeInOut;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var opacityAnimation = animation.drive(tween);
+
+        return FadeTransition(
+          opacity: opacityAnimation,
+          child: child,
+        );
+      },
     );
   }
 }

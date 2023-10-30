@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(16), // Padding for the content
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Text(
                       'No internet connection. Please check your network.',
                       style: TextStyle(
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       _refresh();
                     },
-                    child: Text(
+                    child: const Text(
                       'RETRY',
                       style: TextStyle(
                         fontSize: 16,
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
       await fetchMovies("popular"); // Replace with your data loading function.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
           backgroundColor: Colors.transparent,
           elevation: 8, // Elevation for the custom SnackBar
           content: Container(
@@ -143,13 +143,35 @@ class _HomePageState extends State<HomePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    // Navigate to the search page when the search icon is pressed.
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SearchPage()));
-                  },
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to the search page when the search icon is pressed.
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage()));
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      child: const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Search a movie",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 FutureBuilder(
                   future: fetchMovies("popular"),
