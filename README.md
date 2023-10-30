@@ -1,6 +1,6 @@
 # evegrp
 
-A new Flutter project.
+Flutter project which shows list of movies and their detailed information 
 
 ## Getting Started
 
