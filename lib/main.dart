@@ -31,14 +31,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _internetErrorShown = false; // Add this variable
+
   Future<List<dynamic>> fetchMovies(String endpoint) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
 
     if (connectivityResult == ConnectivityResult.none) {
-      // Display a beautiful error message for no internet connection.
+      // Display a SnackBar for no internet connection.
+      if (!_internetErrorShown) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.transparent,
+            elevation: 8, // Elevation for the custom SnackBar
+            content: Container(
+              decoration: BoxDecoration(
+                color: Colors.red, // Background color
+                borderRadius:
+                    BorderRadius.circular(8), // Customize the border radius
+              ),
+              padding: const EdgeInsets.all(16), // Padding for the content
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'No internet connection. Please check your network.',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _refresh();
+                    },
+                    child: Text(
+                      'RETRY',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        _internetErrorShown = true; // Mark the error as shown
+      }
+
       return Future.error('No internet connection. Please check your network.');
     }
-
     const String apiKey =
         '01daaca0a538d06860c29b97e1a80188'; // Replace with your TMDb API key
     final String url =
@@ -61,6 +105,29 @@ class _HomePageState extends State<HomePage> {
 
     try {
       await fetchMovies("popular"); // Replace with your data loading function.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 1),
+          backgroundColor: Colors.transparent,
+          elevation: 8, // Elevation for the custom SnackBar
+          content: Container(
+            decoration: BoxDecoration(
+              color: Colors.green, // Background color
+              borderRadius:
+                  BorderRadius.circular(8), // Customize the border radius
+            ),
+            padding: const EdgeInsets.all(16), // Padding for the content
+            child: const Text(
+              'Refreshed successfully',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white, // Text color
+              ),
+            ),
+          ),
+        ),
+      );
+
       // Update the state with the new data.
     } catch (e) {
       // Handle errors if any.
