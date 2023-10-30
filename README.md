@@ -40,6 +40,27 @@ The architecture of the Movie Catalog app is designed for efficiency and clarity
 - **Search Functionality:** Allows users to search for movies based on keywords, filtering and displaying relevant results.
 
 - **Error Handling:** Provides user feedback through SnackBars for scenarios like no internet connectivity or failed API requests.
+## Widgets Used
+
+The Movie Catalog app takes advantage of several Flutter widgets to craft its engaging user interface:
+
+- **AppBar**: Positioned at the top of the screen, it holds the app title and the search input field for movie searches.
+
+- **IconButton**: Used for the search icon in the AppBar, allowing users to initiate searches.
+
+- **FutureBuilder**: Key in fetching and presenting movie data gracefully by managing the loading, success, and error states.
+
+- **CarouselSlider**: Creates an engaging image carousel effect, showcasing movie posters dynamically.
+
+- **ListView.builder**: Constructing horizontally scrollable lists of movies in various categories, enabling a seamless browsing experience.
+
+- **ClipRRect**: For rounded corners of movie poster images, giving a polished appearance.
+
+- **SnackBar**: Provides user feedback for errors and actions such as refreshing the data.
+
+- **RefreshIndicator**: Implemented to enable the pull-to-refresh functionality, allowing users to manually refresh the displayed movie data.
+
+These widgets, carefully composed, come together to offer an appealing and interactive movie browsing experience.
 
 ## Screenshots
 
