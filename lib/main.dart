@@ -149,13 +149,7 @@ class HomePage extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MovieDetailsPage(movie: movie),
-                          ),
-                        );
+                        Navigator.of(context).push(_createRoute(movie));
                       },
                       child: Container(
                         width: 150,
@@ -191,6 +185,27 @@ class HomePage extends StatelessWidget {
             ],
           );
         }
+      },
+    );
+  }
+
+  Route _createRoute(Map<String, dynamic> movie) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return MovieDetailsPage(movie: movie);
+      },
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = 0.0;
+        const end = 1.0;
+        const curve = Curves.easeInOut;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var opacityAnimation = animation.drive(tween);
+
+        return FadeTransition(
+          opacity: opacityAnimation,
+          child: child,
+        );
       },
     );
   }
